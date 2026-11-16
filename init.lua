@@ -25,3 +25,15 @@ end
 
 require "lazy_setup"
 require "polish"
+
+-- Terminal mode: make Esc exit insert mode
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
+
+-- Resize windows with Ctrl+arrow keys
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { noremap = true })
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { noremap = true })
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { noremap = true })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { noremap = true })
+
+vim.keymap.set("n", "<leader>gd", ":DiffviewOpen<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>gdc", ":DiffviewClose<CR>", { noremap = true })

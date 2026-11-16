@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroLSP allows you to customize the features in AstroNvim's LSP configuration engine
 -- Configuration documentation can be found with `:h astrolsp`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
@@ -39,12 +37,37 @@ return {
     },
     -- enable servers that you already have installed without mason
     servers = {
-      -- "pyright"
+      "omnisharp",   -- C# Language Server (will work in container)
+      "ts_ls",       -- TypeScript / Angular LSP (runs in test-frontend container)
     },
     -- customize language server configuration passed to `vim.lsp.config`
     -- client specific configuration can also go in `lsp/` in your configuration root (see `:h lsp-config`)
     config = {
       -- ["*"] = { capabilities = {} }, -- modify default LSP client settings such as capabilities
+      omnisharp = {
+        cmd = { "/home/coder/.dotnet/tools/csharp-ls" },
+        settings = {
+          RoslynExtensionsOptions = {
+            EnableAnalyzersSupport = true,
+            EnableRoslynAnalyzers = true,
+          },
+          FormattingOptions = {
+            EnableEditorConfigSupport = true,
+          },
+        },
+      },
+      ts_ls = {
+        settings = {
+          typescript = {
+            inlayHints = {
+              includeInlayParameterNameHints = "literal",
+              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayVariableTypeHints = true,
+            },
+          },
+        },
+      },
     },
     -- customize how language servers are attached
     handlers = {
@@ -84,6 +107,16 @@ return {
           function() vim.lsp.buf.declaration() end,
           desc = "Declaration of current symbol",
           cond = "textDocument/declaration",
+        },
+        gd = {
+          function() vim.lsp.buf.definition() end,
+          desc = "Show the definition of current symbol",
+          cond = "textDocument/definition",
+        },
+        gr = {
+          function() vim.lsp.buf.references() end,
+          desc = "Show references of current symbol",
+          cond = "textDocument/references",
         },
         ["<Leader>uY"] = {
           function() require("astrolsp.toggles").buffer_semantic_tokens() end,
