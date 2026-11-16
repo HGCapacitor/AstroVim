@@ -10,6 +10,25 @@ return {
 	config = function()
 		vim.api.nvim_set_hl(0, "NvimTreeOpenedFile", { fg = "#ffb86c", bold = true })
 
+		local function pick_file_window()
+			local tree_win = vim.api.nvim_get_current_win()
+			local tree_col = vim.fn.win_screenpos(tree_win)[2]
+			for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+				local buf = vim.api.nvim_win_get_buf(win)
+				if
+					vim.api.nvim_win_get_config(win).relative == ""
+					and vim.bo[buf].filetype ~= "NvimTree"
+					and vim.bo[buf].buftype == ""
+					and vim.fn.win_screenpos(win)[2] > tree_col
+				then
+					return win
+				end
+			end
+			vim.cmd("belowright vsplit")
+			vim.api.nvim_win_set_width(tree_win, math.floor(vim.o.columns * 0.2))
+			return vim.api.nvim_get_current_win()
+		end
+
 		require("nvim-tree").setup({
 			update_focused_file = {
 				enable = true,
@@ -25,8 +44,17 @@ return {
 					git_placement = "before",
 				},
 			},
+			actions = {
+				open_file = {
+					window_picker = {
+						picker = pick_file_window,
+					},
+				},
+			},
 			view = {
-				width = 35,
+				width = function()
+					return math.floor(vim.o.columns * 0.2)
+				end,
 			},
 			filters = {
 				dotfiles = false,

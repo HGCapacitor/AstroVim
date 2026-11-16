@@ -61,3 +61,11 @@ vim.opt.rtp:prepend(lazypath)
 -- 5. Initialize lazy.nvim from the ~/.config/nvim/lua/plugins/
 require("lazy").setup("plugins")
 
+-- Terminal mode: make Esc exit insert mode
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
+
+-- Resize windows with Ctrl+arrow keys
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { noremap = true })
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { noremap = true })
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { noremap = true })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { noremap = true })
