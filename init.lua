@@ -64,6 +64,14 @@ require("lazy").setup("plugins")
 -- Terminal mode: make Esc exit insert mode
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
 
+-- Open terminal to the right (unlisted so it doesn't appear in tabs)
+vim.keymap.set("n", "<leader>t", function()
+	vim.cmd("belowright vsplit")
+	vim.cmd("terminal")
+	-- Mark terminal buffer as unlisted so it doesn't show in tabline
+	vim.bo.buflisted = false
+end, { noremap = true, desc = "Open terminal on right" })
+
 -- Resize windows with Ctrl+arrow keys
 vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { noremap = true })
 vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { noremap = true })
